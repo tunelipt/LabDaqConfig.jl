@@ -1,5 +1,7 @@
 module LabDaqConfig
 
-# Write your package code here.
+include("path.jl")
+include("config.jl")
+include("module.jl")
 
 end

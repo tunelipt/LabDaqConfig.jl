@@ -1,0 +1,73 @@
+
+# Informações sobre o projeto
+[project]
+# Nome do projeto
+name = "Túnel de Vento"
+
+# Descrição
+descr = "Exemplo de projeto"
+
+# Endereço do empreendimento
+address = "Av. Professor Almeida Prado 532, prédio 45, Cidade Universitário, São Paulo SP"
+
+# Coordenadas do empreendimento
+coords = [-23.556013572905627, -46.73689818754041,722.0]
+
+# Cliente
+client = "Paulo Jabardo <pjabardo@ipt.br>"
+
+# Nome base para os arquivos gerados e lidos
+tag = "tunel"
+
+#------------------------------------------------------------
+# Pastas para processamento
+# Temos uma pasta de trabalho `work` em relação ao path. Todos os dados
+# intermediários serão colocados nesta pasta. Uma subpasta para cada tipo
+# ensaio ou processamento.
+#
+# As pastas podem ser modificadas em cada ensaio relevante
+[folders]
+# Pasta para dados intermediários - esta pasta pode ser apagada sem problemas,
+# basta recalcular tudo
+work = "work"
+
+# Pasta com dados de saída. Nesta pasta serão colocados arquivos, tabelas,
+# figuras, etc que são o resultado do ensaio.
+output = "output"
+
+# Relatórios de diferentes etapas do ensaio, ou relatório geral
+# (quando necessário) podem ir nesta pasta
+report = "relatorio"
+
+# Dados de medição. As medidas vão ser armazenadas em subpastas desta pasta.
+measurements = "medidas"
+
+# Scripts para realização dos ensaios
+scripts = "scripts"
+
+# Scripts para o processamento dos dados
+process = "process"
+
+# Fontes dos arquivos dos módulos
+modules = "modules-sources"
+
+
+
+
+#------------------------------------------------------------
+# Módulos usados no ensaio
+[[modules]]
+# Podemos fornecer um arquivo com os dad
+# Nome do plugin. Isso é a fonte dos arquivos
+name = "blpitot"
+
+axes = {y=[-100,0,100],x=[100,200,300] }
+
+[modules.device]
+device = "DSA3217"
+ip = "191.30.80.130"
+config = {AVG=200, PERIOD=500, FPS=18}
+
+[[modules]]
+name = "pressure"
+toml = "ensaiocp.toml"

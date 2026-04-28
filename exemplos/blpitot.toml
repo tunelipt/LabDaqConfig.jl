@@ -1,0 +1,57 @@
+# Exemplo para medição de camada limite com tubo de Pitot
+
+
+href = 600.0  # Alutra de referência
+unit = "mm"   # Unidade das alturas
+scale = 0.005  # Fator de escala do ensaio
+
+# O que vamos usar como atuador?
+[actuator]
+type = "RoboSimples"
+axes = ["z"]
+ip = "localhost"
+port = "9596"
+
+[[axes]]
+ref = 0
+z = [5, 10, 15, 20, 30, 40, 50, 60, 80, 100, 120, 140, 160, 180,
+    200, 240, 280, 320, 360, 400, 440, 480, 520, 560]
+
+[[axes]]
+ref = 600
+z = [600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150]
+
+
+[[device]]
+devtype = "DSA3217"
+devname = "pitot"
+ip = "191.30.80.130"
+[device.config]
+AVG=200
+PERIOD=500
+FPS=20
+
+[device.channels]
+Pt = 13
+Pe = 14
+Ptr = 15
+Per = 16
+
+
+
+[fluid]
+rho = 1.09
+
+[pitot]
+Cd = 1.0
+devname = "pitot"
+ptot = "Pt"
+pest = "Pe"
+
+[pitot-ref]
+Cd = 1.0
+devname = "pitot"
+ptot = "Pt"
+pest = "Pe"
+
+
