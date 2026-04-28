@@ -1,6 +1,7 @@
 # Arquivos de configuração
-export AbstractWTProject, WTProject, projectpath, projectroot, projecttag, projectname
-export TOMLConfig, projectaddress, projectcoords, projectdescr
+export AbstractLabDaqProject, LabDaqProject, projectpath
+export rootpath, projecttag, projectname
+export LabDaqConfig, projectaddress, projectcoords, projectdescr
 export projectclient, projectfile
 export projecttoml, generateproject, loadproject, projectfolder
 export workpath, outputpath, reportpath, scriptspath, processpath, measpath
@@ -8,12 +9,12 @@ export workpath, outputpath, reportpath, scriptspath, processpath, measpath
 import TOML
 
 """
-`TOMLConfig`
+`AbstractLabDaqConfig`
 
 An abstract type that uses TOML 
 """
-abstract type TOMLConfig end
-abstract type AbstractWTProject <: TOMLConfig end
+abstract type AbstractLabDaqConfig end
+abstract type AbstractLabDaqProject <: AbstractLabDaqConfig end
 
 const TDict = Dict{String,Any}
 const Folders = Dict{Symbol,String}
@@ -28,8 +29,62 @@ const default_folders = Dict(:output=>"output", :work=>"work",
                              :process=>"process", :report=>"relatorio",
                              :modules=>"modules")
 
+mutable struct TOMLConfig <: AbstractLabDaqConfig
+    root::String
+    toml::TDict
+end
 
-mutable struct WTProject <: AbstractWTProject
+"""
+`TOMLConfig(;file="filename")`
+`TOMLConfig(;str="Contents of TOML File")`
+
+Creates a `TOMLConfig` from a file, a string with the contents of a TOML file
+or a previously read TOML file stored in `Dict{String,Any}` variable.
+
+Every `TOMLConfig` has a root path that is used to build path names. If not provided,
+it will try to use the directory 
+
+"""
+function TOMLConfig(;path=nothing, file=nothing, toml=nothing)
+
+    if !isnothing(file)
+        # Let's read and parse the file
+        str = read(file, String)
+        toml = TOML.parse(str)
+        # Let's get the root path.
+        if isnothing(path)
+            # The path will be hardcoded to directory name where the file is located
+            root = dirname(abspath(file))
+        else
+            if path=""
+                # Current path
+                root = pwd()
+            else
+                root = path
+            end
+        end
+    elseif isa(toml, AbstractString)
+        toml = TOML.parse(tom)
+        if isnothing(path) || path=""
+            root = pwd()
+        else
+            root = path
+        end
+    elseif isa(toml, Dict{String})
+        if isnothing(path) || path=""
+            root = pwd()
+        else
+            root = path
+        end
+    else
+        error("Don't know what `toml` is! You should specify `file` or `toml`")
+    end
+
+    return TOMLConfig(root, toml)
+
+end
+
+mutable struct LabDaqProject <: AbstractLabDaqProject
     "Nome do empreendimento"
     name::String
     "Tag do projeto - nome base dos arquivos"
@@ -56,7 +111,7 @@ mutable struct WTProject <: AbstractWTProject
     fname::String
 end
 
-function Base.show(io::IO, p::WTProject)
+function Base.show(io::IO, p::LabDaqProject)
     println(io, "Project: $(projectname(p))")
     println(io, "    tag: $(projecttag(p))")
     println(io, "    Address: $(projectaddress(p))")
