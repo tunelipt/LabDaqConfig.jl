@@ -23,6 +23,18 @@ const default_folders = Dict(:output=>"output", :work=>"work",
 mutable struct LabDaqConf <: AbstractLabDaqConf
     toml::TDict
     path::String
+end
+
+function Base.show(io::IO, p::LabDaqConf)
+    println(io, "root: $(rootpath(p))")
+    println(io, "  with fields:")
+    for k in keys(p)
+        println("    $k")
+    end
+            
+end
+
+
     """
 `LabDaqConf(file, path=nothing)`
 
@@ -32,27 +44,26 @@ Every `LabDaqConf` has a root path that is used to build path names. If not prov
 it will try to use the directory 
 
 """
-    function LabDaqConf(file, path=nothing)
+function LabDaqConf(file::AbstractString, path=nothing)
 
-        # Let's read and parse the file
-        str = read(file, String)
-        toml = TOML.parse(str)
-        # Let's get the root path.
-        if isnothing(path)
-            # The path will be hardcoded to directory name where the file is located
-            root = dirname(abspath(file))
+    # Let's read and parse the file
+    str = read(file, String)
+    toml = TOML.parse(str)
+    # Let's get the root path.
+    if isnothing(path)
+        # The path will be hardcoded to directory name where the file is located
+        root = dirname(abspath(file))
+    else
+        if path == ""
+            # Current path
+            root = pwd()
         else
-            if path == ""
-                # Current path
-                root = pwd()
-            else
-                root = expanduser(path)
-            end
+            root = expanduser(path)
         end
-        
-        new(toml, root)
-
     end
+    
+    new(toml, root)
+
 end
 
 
@@ -72,3 +83,12 @@ rootpath(c::AbstractLabDaqConf) = c.path
 
 confdict(c::AbstractLabDaqConf) = c.toml
 
+LabDaqConf(c::AbstractLabDaqConf) = LabDaqConf(confdict(c), rootpath(c))
+LabDaqConf(c::AbstractLabDaqConf, index) = LabDaqConf(confdict(c)[index],
+                                                      rootpath(c))
+LabDaqConf(c::AbstractLabDaqConf, index, path) =
+    LabDaqConf(confdict(c)[index],
+               joinpath(rootpath(c), expanduser(path)))
+                                                      
+
+               
