@@ -12,12 +12,12 @@ O módulo deve ter um campo `path` com a raíz da pasta, o campo `folders`
 com as subpastas necessárias. O campo mais importante deve ser o campo
 `module` que tem o repositório com os scripts.
 """
-abstract type AbstractWTModule <: AbstractWTProject end
+abstract type AbstractLabDaqModule <: AbstractLabDaqProject end
 
 
-mutable struct WTModule <: AbstractWTModule
+mutable struct LabDaqModule <: AbstractLabDaqModule
     "Arquivo de configuração do projeto"
-    project::WTProject
+    project::LabDaqProject
     name::String
     path::String
     folders::Dict{Symbol,String}
@@ -26,7 +26,7 @@ mutable struct WTModule <: AbstractWTModule
 end
 
 
-function WTModule(project::WTProject, name::Symbol, path::String,
+function LabDaqModule(project::LabDaqProject, name::Symbol, path::String,
                   toml, repository)
     
 
