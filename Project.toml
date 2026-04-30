@@ -1,6 +1,6 @@
 name = "LabDaqConfig"
 uuid = "b1745ee5-fa00-4f0d-bceb-6dd31eba1690"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["= <pjabardo@ipt.br> and contributors"]
 
 [deps]
